@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Date;
+
 //activity where new warranty details are inputted
 //its meant to:
 //-provide a way to input details of new warranty
@@ -35,6 +37,8 @@ public class AddWarrantyActivity extends AppCompatActivity {
 
     DatePicker datePicker;
 
+    DBHelper db;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +57,8 @@ public class AddWarrantyActivity extends AppCompatActivity {
         datePicker = findViewById(R.id.datePickerStartDate);
         datePicker.setMaxDate(System.currentTimeMillis() - 1000);
 
+        db = new DBHelper(this);
+
         //Log.d("DATE", date);
     }
 
@@ -68,14 +74,17 @@ public class AddWarrantyActivity extends AppCompatActivity {
 
         Product product = new Product(productName, productTypePos);
         int startDay = datePicker.getDayOfMonth(), startMonth = datePicker.getMonth(), startYear = datePicker.getYear();
+        //Date date = new Date(startYear, startMonth, startDay);
+
         int warrantyLengthPos = warrantyLength.getSelectedItemPosition()+1;
         Warranty newWarranty = new Warranty(product, startDay, startMonth, startYear, warrantyLengthPos);
 
         //add to DB
+        db.insertWarranty(newWarranty);
+
         Log.d("NEW WARRANTY", newWarranty.toString());
-        //Toast.makeText(this, "Warranty added!", Toast.LENGTH_SHORT).show();
-        //Snackbar.make(v, "Warranty added!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-        Intent intent=new Intent();
+
+        Intent intent = new Intent();
         setResult(1, intent);
         finish();//finishing activity
     }

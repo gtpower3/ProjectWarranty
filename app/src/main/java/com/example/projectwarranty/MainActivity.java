@@ -8,13 +8,21 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
+    ArrayList<Warranty> warranties;
+    DBHelper db = new DBHelper(this);
+
+    RecyclerView rvWarranty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
         */
+
+        // Lookup the recyclerview in activity layout
+        rvWarranty = (RecyclerView) findViewById(R.id.rvWarranty);
+
+        SyncWarranties();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode == 1){ //if success
                 Snackbar.make(findViewById(android.R.id.content), "Warranty added!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
+            SyncWarranties();
         }
     }
 
@@ -73,5 +87,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void SyncWarranties(){
+        // Initialize contacts
+        warranties = db.getAllWarranties();
+        // Create adapter passing in the sample user data
+        WarrantyAdapter adapter = new WarrantyAdapter(warranties);
+        // Attach the adapter to the recyclerview to populate items
+        rvWarranty.setAdapter(adapter);
+        // Set layout manager to position the items
+        rvWarranty.setLayoutManager(new LinearLayoutManager(this));
+        // That's all!
     }
 }
