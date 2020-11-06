@@ -34,9 +34,23 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 Intent i = new Intent(getApplicationContext(), AddWarrantyActivity.class);
-                startActivity(i);
+                //startActivity(i);
+                startActivityForResult(i, 0);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode==0)
+        {
+            if(resultCode == 1){ //if success
+                Snackbar.make(findViewById(android.R.id.content), "Warranty added!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        }
     }
 
     @Override
